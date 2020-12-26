@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+  <springProfile name="local">
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+      <encoder>
+        <pattern>
+          <pattern>%yellow(%d{yyyy-MM-dd HH:mm:ss.SSS}) %highlight(%-5level) %cyan(%logger{36}) %msg ## \(%mdc\)%n
+          </pattern>
+        </pattern>
+      </encoder>
+    </appender>
+    <root>
+      <appender-ref ref="STDOUT"/>
+    </root>
+  </springProfile>
+
+  <springProfile name="!local">
+    <property resource="application.properties"/>
+    <contextName>${spring.application.name}</contextName>
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+      <encoder class="net.logstash.logback.encoder.LoggingEventCompositeJsonEncoder">
+        <providers>
+          <contextName>
+            <fieldName>appName</fieldName>
+          </contextName>
+          <threadName>
+            <fieldName>appThread</fieldName>
+          </threadName>
+          <timestamp>
+            <fieldName>appTimestamp</fieldName>
+            <timeZone>Europe/Stockholm</timeZone>
+          </timestamp>
+          <loggerName>
+            <fieldName>appLogger</fieldName>
+          </loggerName>
+          <logLevel>
+            <fieldName>appLogLevel</fieldName>
+          </logLevel>
+          <callerData>
+            <classFieldName>callerClass</classFieldName>
+            <methodFieldName>callerMethod</methodFieldName>
+            <fileFieldName>callerFile</fileFieldName>
+            <lineFieldName>callerLine</lineFieldName>
+          </callerData>
+          <mdc/>
+          <arguments>
+            <includeNonStructuredArguments>false</includeNonStructuredArguments>
+          </arguments>
+          <stackTrace>
+            <fieldName>stack</fieldName>
+          </stackTrace>
+          <message>
+            <fieldName>msg</fieldName>
+          </message>
+        </providers>
+      </encoder>
+    </appender>
+    <root>
+      <appender-ref ref="CONSOLE"/>
+    </root>
+  </springProfile>
+</configuration>
