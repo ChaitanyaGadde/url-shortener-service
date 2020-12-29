@@ -6,7 +6,7 @@ import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.divya.url.shortener.clients.rest.GenericUrlVerificationClient;
-import org.divya.url.shortener.component.Shorten;
+import org.divya.url.shortener.component.ShortenInterface;
 import org.divya.url.shortener.errors.ShorteningExceptions;
 import org.divya.url.shortener.model.db.UrlShortenerModel;
 import org.divya.url.shortener.model.dto.UrlShortenRequest;
@@ -19,7 +19,7 @@ import org.springframework.stereotype.Service;
 
 @Slf4j
 @Service
-public class UrlShortenService implements Shorten {
+public class UrlShortenService implements ShortenInterface {
 
   private final GenericUrlVerificationClient genericUrlVerificationClient;
   private final String allowedClients;

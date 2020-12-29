@@ -6,7 +6,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import java.net.URI;
 import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
-import org.divya.url.shortener.component.Shorten;
+import org.divya.url.shortener.component.ShortenInterface;
 import org.divya.url.shortener.model.dto.UrlShortenRequest;
 import org.divya.url.shortener.model.dto.UrlShortenResponse;
 import org.divya.url.shortener.util.UriBuilder;
@@ -28,15 +28,15 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 public class ShorteningController {
 
-  private final Shorten shorten;
+  private final ShortenInterface shortenInterface;
   private final String host;
   private final String port;
   private final String apiPath;
 
-  public ShorteningController(Shorten shorten, @Value("${shortUrl.app.host}") String host,
+  public ShorteningController(ShortenInterface shortenInterface, @Value("${shortUrl.app.host}") String host,
       @Value("${shortUrl.app.port}") String port,
       @Value("${shortUrl.app.apipath}") String apiPath) {
-    this.shorten = shorten;
+    this.shortenInterface = shortenInterface;
     this.host = host;
     this.port = port;
     this.apiPath = apiPath;
@@ -54,7 +54,7 @@ public class ShorteningController {
       log.info("Header received from the request inside controller {} ", kv(key, value));
     });
 
-    String shortenUrlKey = this.shorten.shorten(urlShortenRequest, headers);
+    String shortenUrlKey = shortenInterface.shorten(urlShortenRequest, headers);
     return UrlShortenResponse.builder()
         .shortKey(shortenUrlKey)
         .shortUrl(UriBuilder.buildUriPath(host, port, "/shorten" + apiPath + shortenUrlKey, Map.of()))
@@ -68,7 +68,7 @@ public class ShorteningController {
     log.info("Redirect to the original with short url{} ", shortenedUrl);
 
     return ResponseEntity.status(HttpStatus.FOUND)
-        .location(URI.create(shorten.redirect(shortenedUrl, headers)))
+        .location(URI.create(shortenInterface.redirect(shortenedUrl, headers)))
         .build();
 
   }

@@ -5,7 +5,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Component;
 
 @Component
-public interface Shorten {
+public interface ShortenInterface {
 
   String shorten(UrlShortenRequest url, HttpHeaders httpHeaders);
 
