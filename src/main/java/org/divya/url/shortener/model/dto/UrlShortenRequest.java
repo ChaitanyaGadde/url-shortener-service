@@ -16,6 +16,7 @@ public class UrlShortenRequest {
   private final String url;
   private final int maxLength;
   private final int daysToPersist;
+  private final boolean isRest;
 
   @JsonPOJOBuilder(withPrefix = "")
   public static class Builder {
