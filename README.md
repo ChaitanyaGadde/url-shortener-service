@@ -13,13 +13,17 @@
 
 ## Running the project locally
 ### Running locally in the IDE
+
 - Import to Intellij `mvn clean install`
 - Start the project
 
 ####Running in local docker
--- open project `docker-compose build` and then `docker-compose up` 
+
+- open project `docker-compose build` and then `docker-compose up` 
+
 ####Running in local kube with docker desktop
--- Kubernetes along with docker desktop please use command  `kubectl apply -f shortener-deployment.yaml` 
+
+- Kubernetes along with docker desktop please use command  `kubectl apply -f shortener-deployment.yaml` 
 (do not forget to set the context to docker desktop).
 
 # postman request
