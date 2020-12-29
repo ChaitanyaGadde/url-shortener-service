@@ -11,7 +11,7 @@
     <!-- lookup parent from repository -->
   </parent>
   <groupId>org.divya.url.shortener</groupId>
-  <artifactId>url-shortner</artifactId>
+  <artifactId>url-shortener-service</artifactId>
   <version>1.0</version>
   <packaging>jar</packaging>
   <properties>

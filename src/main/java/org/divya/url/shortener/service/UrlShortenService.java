@@ -2,6 +2,7 @@ package org.divya.url.shortener.service;
 
 import java.net.URI;
 import java.security.NoSuchAlgorithmException;
+import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.divya.url.shortener.clients.rest.GenericUrlVerificationClient;
@@ -53,7 +54,10 @@ public class UrlShortenService implements Shorten {
   @Override
   public String redirect(String shortUrl, HttpHeaders httpHeaders) {
     log.info("into get redirect method url shortener");
-    return null;
+    Optional<UrlShortenerModel> byShortenedUrl = urlShortenerRepository.findByShortenedUrl(shortUrl);
+    return byShortenedUrl
+        .map(UrlShortenerModel::getOriginalUrl)
+        .orElseThrow(RuntimeException::new);
   }
 
   private String performShortening(UrlShortenRequest url, String allowedClient) {

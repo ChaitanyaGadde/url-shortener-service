@@ -1,0 +1,15 @@
+version: '2.2'
+services:
+  urlshortener:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    image: url-shortener-service
+    ports:
+      - "8080:8080"
+    scale: 1
+    networks:
+      - network1
+
+networks:
+  network1:
