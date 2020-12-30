@@ -5,11 +5,9 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Component;
 
-@Component
-@NoArgsConstructor
 @Slf4j
+@NoArgsConstructor
 public class UrlHashGenerator {
 
   private MessageDigest digest;

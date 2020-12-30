@@ -2,6 +2,8 @@ package org.divya.url.shortener.service;
 
 import java.net.URI;
 import java.security.NoSuchAlgorithmException;
+import java.util.Arrays;
+import java.util.Objects;
 import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -23,17 +25,14 @@ public class UrlShortenService implements ShortenInterface {
 
   private final GenericUrlVerificationClient genericUrlVerificationClient;
   private final String allowedClients;
-  private final UrlHashGenerator urlHashGenerator;
   private final UrlShortenerRepository urlShortenerRepository;
 
   public UrlShortenService(
       GenericUrlVerificationClient genericUrlVerificationClient,
       @Value("${whitelisted.X-Clients}") String allowedClients,
-      UrlHashGenerator urlHashGenerator,
       UrlShortenerRepository urlShortenerRepository) {
     this.genericUrlVerificationClient = genericUrlVerificationClient;
     this.allowedClients = allowedClients;
-    this.urlHashGenerator = urlHashGenerator;
     this.urlShortenerRepository = urlShortenerRepository;
   }
 
@@ -67,12 +66,12 @@ public class UrlShortenService implements ShortenInterface {
           + allowedClient
           + url.getDaysToPersist();
 
+      UrlHashGenerator urlHashGenerator = new UrlHashGenerator();
       String generatedHash = urlHashGenerator.generateToken(uniqueParams)
           .substring(0, url.getMaxLength());
       log.info("Generated secure and Hashed url is {}", generatedHash);
-
-      return urlShortenerRepository.save(buildModel(url, generatedHash, allowedClient))
-          .getShortenedUrl();
+      urlShortenerRepository.save(buildModel(url, generatedHash, allowedClient));
+      return generatedHash;
     } catch (NoSuchAlgorithmException e) {
       log.error("Exception hit {}", e.getMessage());
     }
@@ -93,10 +92,14 @@ public class UrlShortenService implements ShortenInterface {
       throw new ShorteningExceptions(HttpStatus.BAD_REQUEST, "No X-Client present at headers, it is required");
     }
     String clientCaller = httpHeaders.getFirst("X-Client");
+
     if (StringUtils.isNotEmpty(clientCaller) &&
-        !allowedClients.contains(clientCaller)) {
+        Arrays.stream(allowedClients.split(","))
+            .filter(Objects::nonNull)
+            .noneMatch(s -> s.equalsIgnoreCase(clientCaller))) {
       throw new ShorteningExceptions(HttpStatus.BAD_REQUEST, "This X-client is not allowed client");
     }
+
   }
 
 }
