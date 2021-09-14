@@ -2,7 +2,6 @@ FROM openjdk:11-jre-slim
 
 LABEL maintainer="Divya Chaitanya Gadde <gaddechaitu2323@gmail.com>"
 
-
 WORKDIR /opt
 
 ADD  target/*.jar libs/
